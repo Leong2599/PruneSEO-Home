@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SEO Audit, Indexation &amp; Waste Cleanup | PruneSEO</title>
+<meta name="description" content="Find repeatable technical SEO problems, understand the evidence, prioritize safe fixes, and measure what changed." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        background: "rgb(var(--background) / <alpha-value>)",
+        foreground: "rgb(var(--foreground) / <alpha-value>)",
+        card: { DEFAULT: "rgb(var(--card) / <alpha-value>)", foreground: "rgb(var(--card-foreground) / <alpha-value>)" },
+        muted: { DEFAULT: "rgb(var(--muted) / <alpha-value>)", foreground: "rgb(var(--muted-foreground) / <alpha-value>)" },
+        border: "rgb(var(--border) / <alpha-value>)",
+        primary: { DEFAULT: "rgb(var(--primary) / <alpha-value>)", foreground: "rgb(var(--primary-foreground) / <alpha-value>)" },
+        accent: { DEFAULT: "rgb(var(--accent) / <alpha-value>)", foreground: "rgb(var(--accent-foreground) / <alpha-value>)" },
+        destructive: { DEFAULT: "rgb(var(--destructive) / <alpha-value>)", foreground: "rgb(var(--destructive-foreground) / <alpha-value>)" },
+        success: "rgb(var(--success) / <alpha-value>)",
+        warning: "rgb(var(--warning) / <alpha-value>)",
+        info: "rgb(var(--info) / <alpha-value>)"
+      },
+      fontFamily: { sans: ["Plus Jakarta Sans", "sans-serif"] }
+    }
+  }
+};
+</script>
+<style>
+:root{--background:253 253 253;--foreground:0 0 0;--card:253 253 253;--card-foreground:0 0 0;--muted:244 244 244;--muted-foreground:111 111 111;--border:233 233 234;--primary:96 110 87;--primary-foreground:255 255 255;--accent:73 89 64;--accent-foreground:255 255 255;--destructive:179 28 28;--destructive-foreground:255 255 255;--success:29 125 62;--warning:154 91 0;--info:31 104 188}
+.dark{--background:28 25 23;--foreground:247 245 243;--card:38 34 30;--card-foreground:247 245 243;--muted:51 46 41;--muted-foreground:168 162 155;--border:63 57 50;--primary:185 198 176;--primary-foreground:23 21 15;--accent:73 89 64;--accent-foreground:255 255 255;--destructive:230 111 102;--destructive-foreground:23 21 15;--success:124 205 142;--warning:234 188 110;--info:128 189 251}
+html{scroll-behavior:smooth}
+body{background:rgb(var(--background));color:rgb(var(--foreground))}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-thumb{background:#9ca3af;border-radius:9999px}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal-hidden{opacity:0;transform:translateY(20px)}
+.reveal-visible{animation:fade-up .6s cubic-bezier(.22,1,.36,1) both}
+@keyframes ripple{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(.9)}}
+.ripple-circle{position:absolute;top:50%;left:50%;border-radius:9999px;border:1px solid rgb(var(--foreground));animation:ripple 2s ease infinite}
+.faq-answer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .2s ease-out}
+.faq-answer>div{overflow:hidden}
+.faq-item[data-open="true"] .faq-answer{grid-template-rows:1fr}
+.faq-item[data-open="true"] .faq-chevron{transform:rotate(180deg)}
+.faq-chevron{transition:transform .2s ease-out}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.reveal-hidden{opacity:1;transform:none}}
+</style>
+<script>(function(){try{if(localStorage.getItem("theme")==="dark")document.documentElement.classList.add("dark")}catch(e){}})();</script>
+</head>
+<body class="min-h-screen font-sans antialiased">
+<div class="flex min-h-screen flex-col">
+<header id="site-header" class="sticky inset-x-0 top-0 z-40 py-4 transition-all duration-300">
+  <div class="relative z-10">
+    <div class="mx-auto max-w-7xl px-4">
+      <nav aria-label="Main navigation" class="hidden items-center justify-between gap-4 lg:flex">
+        <a href="https://pruneseo.com" aria-label="Home" class="flex shrink-0 items-center gap-2"><i data-lucide="zap" class="size-8"></i><span class="text-xl font-semibold">PruneSEO</span></a>
+        <ul class="flex flex-1 items-center justify-center gap-1 text-sm">
+          <li><a href="#how-it-works" class="rounded-md px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">Indexation Audit</a></li>
+          <li class="group relative">
+            <button type="button" class="flex items-center gap-1 rounded-md px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">SEO Tools <i data-lucide="chevron-down" class="size-4 transition-transform group-hover:rotate-180"></i></button>
+            <div class="invisible absolute left-1/2 top-full z-50 w-[560px] -translate-x-1/2 pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100">
+              <ul class="grid w-full grid-cols-2 gap-1 rounded-xl border border-border bg-card p-3 shadow-xl">
+                <li><a href="https://pruneseo.com/domain-rating-checker" class="flex items-start gap-3 rounded-md p-2 hover:bg-accent/10"><i data-lucide="gauge" class="mt-0.5 size-4 shrink-0"></i><span><span class="block text-sm font-medium">Domain Rating Checker</span><span class="block text-xs text-muted-foreground">Check a website score and backlink counts</span></span></a></li>
+                <li><a href="https://pruneseo.com/sitemap-checker" class="flex items-start gap-3 rounded-md p-2 hover:bg-accent/10"><i data-lucide="list-tree" class="mt-0.5 size-4 shrink-0"></i><span><span class="block text-sm font-medium">Sitemap Checker</span><span class="block text-xs text-muted-foreground">Count sitemap URLs and see observations</span></span></a></li>
+                <li><a href="https://pruneseo.com/robots-txt-checker" class="flex items-start gap-3 rounded-md p-2 hover:bg-accent/10"><i data-lucide="file-text" class="mt-0.5 size-4 shrink-0"></i><span><span class="block text-sm font-medium">Robots.txt Checker</span><span class="block text-xs text-muted-foreground">Read crawl rules and declared sitemaps</span></span></a></li>
+                <li><a href="https://pruneseo.com/keyword-density-checker" class="flex items-start gap-3 rounded-md p-2 hover:bg-accent/10"><i data-lucide="text-search" class="mt-0.5 size-4 shrink-0"></i><span><span class="block text-sm font-medium">Keyword Density Checker</span><span class="block text-xs text-muted-foreground">Count word frequency in your text</span></span></a></li>
+                <li><a href="https://pruneseo.com/serp-snippet-simulator" class="flex items-start gap-3 rounded-md p-2 hover:bg-accent/10"><i data-lucide="eye" class="mt-0.5 size-4 shrink-0"></i><span><span class="block text-sm font-medium">SERP Snippet Simulator</span><span class="block text-xs text-muted-foreground">Preview a result by pixel width</span></span></a></li>
+                <li><a href="https://pruneseo.com/open-graph-twitter-card" class="flex items-start gap-3 rounded-md p-2 hover:bg-accent/10"><i data-lucide="share-2" class="mt-0.5 size-4 shrink-0"></i><span><span class="block text-sm font-medium">Open Graph &amp; Twitter Card</span><span class="block text-xs text-muted-foreground">Build social tags and preview cards</span></span></a></li>
+                <li><a href="https://pruneseo.com/hreflang-tag-generator" class="flex items-start gap-3 rounded-md p-2 hover:bg-accent/10"><i data-lucide="languages" class="mt-0.5 size-4 shrink-0"></i><span><span class="block text-sm font-medium">Hreflang Tag Generator</span><span class="block text-xs text-muted-foreground">Generate language alternate tags</span></span></a></li>
+                <li><a href="https://pruneseo.com/json-ld-schema-generator" class="flex items-start gap-3 rounded-md p-2 hover:bg-accent/10"><i data-lucide="braces" class="mt-0.5 size-4 shrink-0"></i><span><span class="block text-sm font-medium">JSON-LD Schema Generator</span><span class="block text-xs text-muted-foreground">Generate validated structured data</span></span></a></li>
+              </ul>
+            </div>
+          </li>
+          <li><a href="https://pruneseo.com/feature-flow" class="rounded-md px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">Feature Flow</a></li>
+          <li><a href="https;//pruneseo.com/demo" class="rounded-md px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">Demo</a></li>
+          <li><a href="#pricing" class="rounded-md px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">Pricing</a></li>
+          <li><a href="#faqs" class="rounded-md px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">FAQ</a></li>
+        </ul>
+        <div class="flex shrink-0 items-center gap-3">
+          <button type="button" id="theme-toggle" aria-label="Toggle theme" class="inline-flex size-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"><i data-lucide="moon" class="theme-icon-dark size-4"></i><i data-lucide="sun" class="theme-icon-light hidden size-4"></i></button>
+          <a href="https://pruneseo.com/login" class="inline-flex h-9 items-center justify-center rounded-lg border border-border bg-background px-3 text-sm font-medium transition-colors hover:bg-muted">Login</a>
+          <a href="https://pruneseo.com/register" class="inline-flex h-9 items-center justify-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">Sign Up</a>
+        </div>
+      </nav>
+      <div class="flex items-center justify-between lg:hidden">
+        <a href="https://pruneseo.com" class="flex items-center gap-2"><i data-lucide="zap" class="size-7"></i><span class="text-lg font-semibold">PruneSEO</span></a>
+        <button type="button" id="mobile-toggle" aria-label="Toggle menu" aria-expanded="false" class="inline-flex size-9 items-center justify-center rounded-lg border border-border"><i data-lucide="menu" class="size-5"></i></button>
+      </div>
+      <div id="mobile-menu" class="hidden pt-4 lg:hidden">
+        <ul class="space-y-1 rounded-xl border border-border bg-card p-3 text-sm">
+          <li><a href="https://pruneseo.com/how-it-works" class="block rounded-md px-3 py-2 font-medium hover:bg-muted">Indexation Audit</a></li>
+          <li><a href="https://pruneseo.com/feature-flow" class="block rounded-md px-3 py-2 font-medium hover:bg-muted">Feature Flow</a></li>
+          <li><a href="https://pruneseo.com/demo" class="block rounded-md px-3 py-2 font-medium hover:bg-muted">Demo</a></li>
+          <li><a href="#pricing" class="block rounded-md px-3 py-2 font-medium hover:bg-muted">Pricing</a></li>
+          <li><a href="#faqs" class="block rounded-md px-3 py-2 font-medium hover:bg-muted">FAQ</a></li>
+          <li class="flex items-center gap-2 pt-2"><a href="https://pruneseo.com/login" class="flex h-9 flex-1 items-center justify-center rounded-lg border border-border text-sm font-medium">Login</a><a href="https://pruneseo.com/register" class="flex h-9 flex-1 items-center justify-center rounded-lg bg-primary text-sm font-medium text-primary-foreground">Sign Up</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+<main id="main" class="flex-1">
+
+<!-- HERO -->
+<section id="hero" class="relative overflow-hidden">
+  <div aria-hidden="true" class="absolute inset-0 isolate hidden opacity-70 contain-strict lg:block">
+    <div class="absolute -top-1/2 left-1/2 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl"></div>
+  </div>
+  <div class="relative pb-8 pt-16 md:pt-24">
+    <div class="relative mx-auto max-w-7xl px-6">
+      <div id="ripple" aria-hidden="true" class="pointer-events-none absolute inset-0 select-none" style="mask-image:linear-gradient(to bottom,white,transparent);-webkit-mask-image:linear-gradient(to bottom,white,transparent)"></div>
+      <div class="relative mx-auto flex max-w-3xl flex-col items-center text-center">
+        <h1 class="mt-8 text-balance text-4xl font-semibold tracking-tighter text-foreground sm:text-5xl lg:text-[3.75rem] lg:leading-[1.05]">
+          Find the URLs Google isn&rsquo;t indexing.
+          <span class="mt-2 block bg-gradient-to-r from-primary via-primary to-primary/50 bg-clip-text pb-1 text-transparent">Fix the SEO waste.</span>
+        </h1>
+        <p class="mt-6 max-w-2xl text-balance text-lg text-muted-foreground">Discover technical SEO issues, identify wasteful URL patterns, and turn thousands of URLs into a prioritized action plan.</p>
+        <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row">
+          <a href="#pricing" class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90 sm:w-auto"><span class="whitespace-nowrap">Audit Your Website</span><i data-lucide="arrow-right" class="size-4"></i></a>
+          <a href="#how-it-works" class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-background px-6 text-base font-medium transition-colors hover:bg-muted sm:w-auto"><span class="whitespace-nowrap">See How It Works</span></a>
+        </div>
+        <p class="mt-5 text-sm text-muted-foreground">Start with a public audit. Verify ownership for ongoing monitoring.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section id="product-video" aria-labelledby="product-video-heading" class="relative overflow-hidden py-16 sm:py-24">
+  <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 bg-gradient-to-b from-primary/[0.04] to-transparent"></div>
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 id="product-video-heading" class="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">See PruneSEO in action</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">A short introduction to how crawl data becomes a prioritized SEO action plan.</p>
+    </div>
+    <div class="mx-auto mt-10 max-w-5xl sm:mt-12">
+      <div class="relative aspect-video overflow-hidden rounded-2xl border border-border bg-card shadow-2xl shadow-black/10">
+        <button type="button" id="video-play" class="group absolute inset-0 size-full" aria-label="Play PruneSEO product introduction">
+          <img src="https://i.ytimg.com/vi/HGKo_-JewbU/maxresdefault.jpg" alt="" class="size-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://i.ytimg.com/vi/HGKo_-JewbU/hqdefault.jpg'" />
+          <span class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/20"></span>
+          <span class="absolute inset-0 flex items-center justify-center">
+            <span class="flex size-20 items-center justify-center rounded-full bg-white/15 backdrop-blur-md transition-transform duration-200 group-hover:scale-110">
+              <span class="flex size-14 items-center justify-center rounded-full bg-primary shadow-lg"><i data-lucide="play" class="ml-0.5 size-6 fill-primary-foreground text-primary-foreground"></i></span>
+            </span>
+          </span>
+        </button>
+        <iframe id="video-frame" class="absolute inset-0 hidden size-full" src="" title="PruneSEO product introduction" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE FLOW -->
+<section id="how-it-works" class="relative overflow-hidden bg-background px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <div class="mx-auto max-w-3xl text-center">
+      <span class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3.5 py-1.5 text-xs font-semibold tracking-[0.18em] text-primary"><i data-lucide="zap" class="size-3.5"></i> HOW PRUNE SEO WORKS</span>
+      <h2 class="mt-5 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-5xl">From crawl to action<span class="block text-primary">in 6 simple steps</span></h2>
+      <p class="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">Find technical SEO issues, uncover wasteful URL patterns, and get a prioritized plan to improve your website.</p>
+    </div>
+    <div class="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+
+      <article class="group flex min-w-0 flex-col rounded-2xl border border-primary/20 bg-primary/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg sm:p-6">
+        <div class="flex items-start gap-3"><div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground shadow-sm">01</div><div class="min-w-0 pt-1"><p class="text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Step 1</p><h3 class="mt-1 text-lg font-bold tracking-tight text-foreground">Add your website</h3></div></div>
+        <p class="mt-4 min-h-[60px] text-sm leading-6 text-muted-foreground">Enter your domain and choose a public audit or verify ownership for ongoing monitoring.</p>
+        <div class="mt-5 flex-1">
+          <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+            <div class="flex items-center gap-1.5 border-b border-border px-3 py-2.5"><span class="size-2 rounded-full bg-destructive"></span><span class="size-2 rounded-full bg-warning"></span><span class="size-2 rounded-full bg-success"></span><div class="ml-2 flex min-w-0 flex-1 items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-[10px] text-muted-foreground"><i data-lucide="lock-keyhole" class="size-3 shrink-0"></i><span class="truncate">https://example.com</span></div></div>
+            <div class="p-4">
+              <div class="mb-4 flex items-center gap-2"><div class="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground"><i data-lucide="zap" class="size-4"></i></div><span class="text-sm font-bold text-foreground">PruneSEO</span></div>
+              <label class="mb-1.5 block text-xs font-medium text-muted-foreground">Website URL</label>
+              <div class="flex items-center gap-2 rounded-lg border border-border px-3 py-2.5 text-xs text-muted-foreground"><i data-lucide="globe" class="size-3.5"></i> example.com</div>
+              <div class="mt-3 grid grid-cols-2 gap-2">
+                <div class="rounded-lg border border-primary/40 bg-primary/10 p-2.5"><i data-lucide="search" class="mb-2 size-4 text-primary"></i><p class="text-xs font-semibold text-foreground">Public audit</p><p class="mt-1 text-[10px] text-muted-foreground">No verification</p></div>
+                <div class="rounded-lg border border-border p-2.5"><i data-lucide="shield-check" class="mb-2 size-4 text-muted-foreground"></i><p class="text-xs font-semibold text-foreground">My website</p><p class="mt-1 text-[10px] text-muted-foreground">Verify ownership</p></div>
+              </div>
+              <div class="mt-3 flex items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2.5 text-xs font-semibold text-primary-foreground">Start audit <i data-lucide="arrow-right" class="size-3.5"></i></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group flex min-w-0 flex-col rounded-2xl border border-info/20 bg-info/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-info/40 hover:shadow-lg sm:p-6">
+        <div class="flex items-start gap-3"><div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-info text-sm font-bold text-white shadow-sm">02</div><div class="min-w-0 pt-1"><p class="text-[10px] font-bold uppercase tracking-[0.16em] text-info">Step 2</p><h3 class="mt-1 text-lg font-bold tracking-tight text-foreground">We crawl your site</h3></div></div>
+        <p class="mt-4 min-h-[60px] text-sm leading-6 text-muted-foreground">Discover URLs from sitemaps and internal links, then collect important technical SEO signals.</p>
+        <div class="mt-5 flex-1">
+          <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+            <div class="flex items-center gap-1.5 border-b border-border px-3 py-2.5"><span class="size-2 rounded-full bg-destructive"></span><span class="size-2 rounded-full bg-warning"></span><span class="size-2 rounded-full bg-success"></span><div class="ml-2 flex min-w-0 flex-1 items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-[10px] text-muted-foreground"><i data-lucide="lock-keyhole" class="size-3 shrink-0"></i><span class="truncate">https://example.com</span></div></div>
+            <div class="p-4">
+              <div class="flex items-center gap-3 rounded-lg border border-info/20 bg-info/5 p-3">
+                <div class="flex size-11 shrink-0 items-center justify-center rounded-full border-4 border-info/20 border-t-info"><i data-lucide="globe" class="size-4 text-info"></i></div>
+                <div class="min-w-0 flex-1"><p class="text-sm font-semibold text-foreground">Crawling site...</p><p class="mt-1 text-[10px] text-muted-foreground">Discovering and analyzing URLs</p><div class="mt-2 h-1.5 overflow-hidden rounded-full bg-info/15"><div class="h-full w-2/3 rounded-full bg-info"></div></div></div>
+              </div>
+              <div class="mt-3 space-y-1">
+                <div class="flex items-center justify-between rounded-md px-2 py-2 text-xs text-muted-foreground"><span class="truncate">/</span><i data-lucide="circle-check" class="size-3.5 shrink-0 text-success"></i></div>
+                <div class="flex items-center justify-between rounded-md px-2 py-2 text-xs text-muted-foreground"><span class="truncate">/blog/seo-guide</span><i data-lucide="circle-check" class="size-3.5 shrink-0 text-success"></i></div>
+                <div class="flex items-center justify-between rounded-md px-2 py-2 text-xs text-muted-foreground"><span class="truncate">/products</span><i data-lucide="circle-check" class="size-3.5 shrink-0 text-success"></i></div>
+                <div class="flex items-center justify-between rounded-md px-2 py-2 text-xs text-muted-foreground"><span class="truncate">/category/seo</span><i data-lucide="circle-check" class="size-3.5 shrink-0 text-success"></i></div>
+              </div>
+              <p class="mt-2 flex items-center gap-1.5 text-[10px] text-muted-foreground"><i data-lucide="clock-3" class="size-3"></i> Live progress appears during a crawl</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group flex min-w-0 flex-col rounded-2xl border border-warning/20 bg-warning/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-warning/40 hover:shadow-lg sm:p-6">
+        <div class="flex items-start gap-3"><div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-warning text-sm font-bold text-white shadow-sm">03</div><div class="min-w-0 pt-1"><p class="text-[10px] font-bold uppercase tracking-[0.16em] text-warning">Step 3</p><h3 class="mt-1 text-lg font-bold tracking-tight text-foreground">Find SEO issues</h3></div></div>
+        <p class="mt-4 min-h-[60px] text-sm leading-6 text-muted-foreground">Detect broken links, indexing signals, duplicate content, and wasteful URL patterns.</p>
+        <div class="mt-5 flex-1">
+          <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+            <div class="flex items-center gap-1.5 border-b border-border px-3 py-2.5"><span class="size-2 rounded-full bg-destructive"></span><span class="size-2 rounded-full bg-warning"></span><span class="size-2 rounded-full bg-success"></span><div class="ml-2 flex min-w-0 flex-1 items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-[10px] text-muted-foreground"><i data-lucide="lock-keyhole" class="size-3 shrink-0"></i><span class="truncate">app.pruneseo.com/issues</span></div></div>
+            <div class="p-4">
+              <div class="flex items-center justify-between border-b border-border pb-3"><p class="text-xs font-semibold text-foreground">Issue overview</p><span class="rounded-full bg-warning/10 px-2 py-1 text-[10px] text-warning">Demo data</span></div>
+              <div class="mt-3 space-y-2">
+                <div class="flex items-center gap-2.5 rounded-lg border border-border p-2.5"><div class="rounded-md bg-destructive/10 p-2"><i data-lucide="circle-alert" class="size-3.5 text-destructive"></i></div><span class="min-w-0 flex-1 text-xs font-medium text-foreground">Indexation signals</span><span class="text-[10px] text-muted-foreground">Review</span></div>
+                <div class="flex items-center gap-2.5 rounded-lg border border-border p-2.5"><div class="rounded-md bg-warning/10 p-2"><i data-lucide="file-search" class="size-3.5 text-warning"></i></div><span class="min-w-0 flex-1 text-xs font-medium text-foreground">Duplicate content</span><span class="text-[10px] text-muted-foreground">128 URLs</span></div>
+                <div class="flex items-center gap-2.5 rounded-lg border border-border p-2.5"><div class="rounded-md bg-info/10 p-2"><i data-lucide="link-2" class="size-3.5 text-info"></i></div><span class="min-w-0 flex-1 text-xs font-medium text-foreground">Broken links</span><span class="text-[10px] text-muted-foreground">56 URLs</span></div>
+                <div class="flex items-center gap-2.5 rounded-lg border border-border p-2.5"><div class="rounded-md bg-muted p-2"><i data-lucide="search" class="size-3.5 text-muted-foreground"></i></div><span class="min-w-0 flex-1 text-xs font-medium text-foreground">Other issues</span><span class="text-[10px] text-muted-foreground">View all</span></div>
+              </div>
+              <div class="mt-3 rounded-lg bg-warning/10 p-3"><p class="flex items-center gap-2 text-xs font-medium text-warning"><i data-lucide="sparkles" class="size-3.5"></i> Discover URL patterns</p><p class="mt-1 text-[10px] leading-4 text-warning">Identify repeated issues across groups of URLs.</p></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+
+      <article class="group flex min-w-0 flex-col rounded-2xl border border-success/20 bg-success/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-success/40 hover:shadow-lg sm:p-6">
+        <div class="flex items-start gap-3"><div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-success text-sm font-bold text-white shadow-sm">04</div><div class="min-w-0 pt-1"><p class="text-[10px] font-bold uppercase tracking-[0.16em] text-success">Step 4</p><h3 class="mt-1 text-lg font-bold tracking-tight text-foreground">See what matters</h3></div></div>
+        <p class="mt-4 min-h-[60px] text-sm leading-6 text-muted-foreground">Explore URL-level evidence, issue clusters, and the patterns affecting your website.</p>
+        <div class="mt-5 flex-1">
+          <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+            <div class="flex items-center gap-1.5 border-b border-border px-3 py-2.5"><span class="size-2 rounded-full bg-destructive"></span><span class="size-2 rounded-full bg-warning"></span><span class="size-2 rounded-full bg-success"></span><div class="ml-2 flex min-w-0 flex-1 items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-[10px] text-muted-foreground"><i data-lucide="lock-keyhole" class="size-3 shrink-0"></i><span class="truncate">app.pruneseo.com/urls</span></div></div>
+            <div class="p-4">
+              <div class="flex items-center gap-2 border-b border-border pb-3"><i data-lucide="file-search" class="size-4 text-success"></i><p class="text-xs font-semibold text-foreground">URL analysis</p></div>
+              <div class="mt-3 flex gap-2 overflow-hidden text-[10px]"><span class="whitespace-nowrap rounded-md bg-success/10 px-2 py-1 font-medium text-success">All URLs</span><span class="whitespace-nowrap rounded-md bg-muted px-2 py-1 text-muted-foreground">Issues</span><span class="whitespace-nowrap rounded-md bg-muted px-2 py-1 text-muted-foreground">Patterns</span></div>
+              <div class="mt-3 overflow-hidden rounded-lg border border-border">
+                <div class="grid grid-cols-[1.1fr_1fr] gap-2 bg-muted px-2.5 py-2 text-[10px] font-semibold text-muted-foreground"><span>URL</span><span>Finding</span></div>
+                <div class="grid grid-cols-[1.1fr_1fr] gap-2 border-t border-border px-2.5 py-3 text-[10px]"><span class="truncate text-muted-foreground">/blog/seo-tips</span><span class="truncate text-warning">Review canonical</span></div>
+                <div class="grid grid-cols-[1.1fr_1fr] gap-2 border-t border-border px-2.5 py-3 text-[10px]"><span class="truncate text-muted-foreground">/product?id=123</span><span class="truncate text-destructive">Duplicate pattern</span></div>
+                <div class="grid grid-cols-[1.1fr_1fr] gap-2 border-t border-border px-2.5 py-3 text-[10px]"><span class="truncate text-muted-foreground">/category/old</span><span class="truncate text-warning">Redirect chain</span></div>
+                <div class="grid grid-cols-[1.1fr_1fr] gap-2 border-t border-border px-2.5 py-3 text-[10px]"><span class="truncate text-muted-foreground">/temp-page</span><span class="truncate text-info">Noindex signal</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group flex min-w-0 flex-col rounded-2xl border border-primary/20 bg-primary/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg sm:p-6">
+        <div class="flex items-start gap-3"><div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground shadow-sm">05</div><div class="min-w-0 pt-1"><p class="text-[10px] font-bold uppercase tracking-[0.16em] text-primary">Step 5</p><h3 class="mt-1 text-lg font-bold tracking-tight text-foreground">Get your action plan</h3></div></div>
+        <p class="mt-4 min-h-[60px] text-sm leading-6 text-muted-foreground">Turn findings into prioritized fixes with clear explanations and recommended next steps.</p>
+        <div class="mt-5 flex-1">
+          <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+            <div class="flex items-center gap-1.5 border-b border-border px-3 py-2.5"><span class="size-2 rounded-full bg-destructive"></span><span class="size-2 rounded-full bg-warning"></span><span class="size-2 rounded-full bg-success"></span><div class="ml-2 flex min-w-0 flex-1 items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-[10px] text-muted-foreground"><i data-lucide="lock-keyhole" class="size-3 shrink-0"></i><span class="truncate">app.pruneseo.com/recommendations</span></div></div>
+            <div class="p-4">
+              <div class="flex items-center justify-between"><p class="text-xs font-semibold text-foreground">Your action plan</p><span class="text-[10px] text-muted-foreground">Prioritized</span></div>
+              <div class="mt-3 space-y-2">
+                <div class="flex items-start gap-2.5 rounded-lg border border-border p-2.5"><span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">1</span><div class="min-w-0 flex-1"><p class="text-[11px] font-medium leading-4 text-foreground">Review indexation blockers</p><span class="mt-1 inline-flex rounded bg-destructive/10 px-1.5 py-0.5 text-[9px] font-medium text-destructive">High priority</span></div></div>
+                <div class="flex items-start gap-2.5 rounded-lg border border-border p-2.5"><span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">2</span><div class="min-w-0 flex-1"><p class="text-[11px] font-medium leading-4 text-foreground">Review duplicate URL patterns</p><span class="mt-1 inline-flex rounded bg-primary/10 px-1.5 py-0.5 text-[9px] font-medium text-primary">High priority</span></div></div>
+                <div class="flex items-start gap-2.5 rounded-lg border border-border p-2.5"><span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">3</span><div class="min-w-0 flex-1"><p class="text-[11px] font-medium leading-4 text-foreground">Fix broken internal links</p><span class="mt-1 inline-flex rounded bg-warning/10 px-1.5 py-0.5 text-[9px] font-medium text-warning">Medium priority</span></div></div>
+                <div class="flex items-start gap-2.5 rounded-lg border border-border p-2.5"><span class="flex size-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">4</span><div class="min-w-0 flex-1"><p class="text-[11px] font-medium leading-4 text-foreground">Simplify unnecessary URLs</p><span class="mt-1 inline-flex rounded bg-info/10 px-1.5 py-0.5 text-[9px] font-medium text-info">Investigate</span></div></div>
+              </div>
+              <p class="mt-3 text-[10px] leading-4 text-muted-foreground">Recommendations include supporting evidence and suggested next steps.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="group flex min-w-0 flex-col rounded-2xl border border-info/20 bg-info/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-info/40 hover:shadow-lg sm:p-6">
+        <div class="flex items-start gap-3"><div class="flex size-11 shrink-0 items-center justify-center rounded-full bg-info text-sm font-bold text-white shadow-sm">06</div><div class="min-w-0 pt-1"><p class="text-[10px] font-bold uppercase tracking-[0.16em] text-info">Step 6</p><h3 class="mt-1 text-lg font-bold tracking-tight text-foreground">Improve and grow</h3></div></div>
+        <p class="mt-4 min-h-[60px] text-sm leading-6 text-muted-foreground">Apply the changes, run another crawl, and compare results to measure progress.</p>
+        <div class="mt-5 flex-1">
+          <div class="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+            <div class="flex items-center gap-1.5 border-b border-border px-3 py-2.5"><span class="size-2 rounded-full bg-destructive"></span><span class="size-2 rounded-full bg-warning"></span><span class="size-2 rounded-full bg-success"></span><div class="ml-2 flex min-w-0 flex-1 items-center gap-1.5 rounded-md bg-muted px-2 py-1 text-[10px] text-muted-foreground"><i data-lucide="lock-keyhole" class="size-3 shrink-0"></i><span class="truncate">app.pruneseo.com/history</span></div></div>
+            <div class="p-4">
+              <div class="flex items-center justify-between"><div><p class="text-xs font-semibold text-foreground">Crawl comparison</p><p class="mt-1 text-[10px] text-muted-foreground">Previous run vs. latest run</p></div><i data-lucide="trending-up" class="size-5 text-success"></i></div>
+              <div class="mt-4 flex h-28 items-end gap-1.5 rounded-lg bg-info/5 px-3 pb-3 pt-4">
+                <div class="flex-1 rounded-t-sm bg-info/70" style="height:25%"></div><div class="flex-1 rounded-t-sm bg-info/70" style="height:38%"></div><div class="flex-1 rounded-t-sm bg-info/70" style="height:32%"></div><div class="flex-1 rounded-t-sm bg-info/70" style="height:53%"></div><div class="flex-1 rounded-t-sm bg-info/70" style="height:47%"></div><div class="flex-1 rounded-t-sm bg-info/70" style="height:66%"></div><div class="flex-1 rounded-t-sm bg-info/70" style="height:58%"></div><div class="flex-1 rounded-t-sm bg-info/70" style="height:82%"></div><div class="flex-1 rounded-t-sm bg-info/70" style="height:72%"></div><div class="flex-1 rounded-t-sm bg-info/70" style="height:94%"></div>
+              </div>
+              <div class="mt-3 grid grid-cols-2 gap-2">
+                <div class="rounded-lg border border-border p-2.5"><p class="text-[10px] text-muted-foreground">Latest crawl</p><p class="mt-1 text-xs font-semibold text-foreground">Results ready</p></div>
+                <div class="rounded-lg border border-success/20 bg-success/5 p-2.5"><p class="text-[10px] text-success">Next step</p><p class="mt-1 flex items-center gap-1 text-xs font-semibold text-success"><i data-lucide="check" class="size-3.5"></i> Re-crawl</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div class="mt-12 grid grid-cols-1 gap-4 border-t border-border pt-8 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="flex items-start gap-3 px-2"><div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground"><i data-lucide="search" class="size-5"></i></div><div><h3 class="text-sm font-semibold text-foreground">Evidence first</h3><p class="mt-1 text-xs leading-5 text-muted-foreground">See the data behind each finding.</p></div></div>
+      <div class="flex items-start gap-3 px-2"><div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground"><i data-lucide="shield-check" class="size-5"></i></div><div><h3 class="text-sm font-semibold text-foreground">Safe by design</h3><p class="mt-1 text-xs leading-5 text-muted-foreground">Review recommendations before applying changes.</p></div></div>
+      <div class="flex items-start gap-3 px-2"><div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground"><i data-lucide="zap" class="size-5"></i></div><div><h3 class="text-sm font-semibold text-foreground">Built to scale</h3><p class="mt-1 text-xs leading-5 text-muted-foreground">Analyze URL patterns across large sites.</p></div></div>
+      <div class="flex items-start gap-3 px-2"><div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground"><i data-lucide="trending-up" class="size-5"></i></div><div><h3 class="text-sm font-semibold text-foreground">Track progress</h3><p class="mt-1 text-xs leading-5 text-muted-foreground">Compare crawl results over time.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section id="before-after" aria-labelledby="before-after-heading" class="relative overflow-hidden py-20 sm:py-28">
+  <div class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 bg-gradient-to-b from-orange-500/[0.04] to-transparent"></div>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-3xl text-center">
+      <span class="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-orange-700 dark:text-orange-300"><i data-lucide="sparkles" class="size-3.5"></i> A better way to audit</span>
+      <h2 id="before-after-heading" class="mt-6 text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">From crawl data overload<br class="hidden sm:block" /> to a clear plan of action.</h2>
+      <p class="mx-auto mt-5 max-w-2xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">The goal isn&rsquo;t another giant SEO report. It&rsquo;s knowing which URL patterns to investigate, why they matter, and what to do next.</p>
+    </div>
+
+    <div class="mt-12 grid gap-5 lg:mt-16 lg:grid-cols-2 lg:gap-6">
+      <div class="flex h-full flex-col rounded-2xl border border-border bg-card p-5 sm:p-7">
+        <div class="flex items-center gap-3"><div class="flex size-11 items-center justify-center rounded-xl bg-muted text-muted-foreground"><i data-lucide="circle-alert" class="size-5"></i></div><div><p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Without a clear workflow</p><h3 class="mt-1 text-xl font-semibold">The old way</h3></div></div>
+        <p class="mt-5 text-sm leading-6 text-muted-foreground">You have the crawl data, but finding the important patterns takes time and manual investigation.</p>
+        <div class="mt-6 overflow-hidden rounded-xl border border-border bg-background">
+          <div class="flex items-center justify-between border-b border-border px-3 py-3"><span class="text-xs font-medium text-muted-foreground">Crawl export.csv</span><span class="rounded-md bg-muted px-2 py-1 text-[10px] text-muted-foreground">RAW DATA</span></div>
+          <div class="space-y-0.5 p-2">
+            <div class="grid grid-cols-[1fr_auto] items-center gap-2 rounded-md px-2 py-2 text-xs odd:bg-muted/40"><span class="truncate font-mono text-muted-foreground">/products?id=104&amp;sort=price</span><span class="font-mono text-muted-foreground">200</span></div>
+            <div class="grid grid-cols-[1fr_auto] items-center gap-2 rounded-md px-2 py-2 text-xs odd:bg-muted/40"><span class="truncate font-mono text-muted-foreground">/products?id=104&amp;sort=name</span><span class="font-mono text-muted-foreground">200</span></div>
+            <div class="grid grid-cols-[1fr_auto] items-center gap-2 rounded-md px-2 py-2 text-xs odd:bg-muted/40"><span class="truncate font-mono text-muted-foreground">/products?id=105&amp;sort=price</span><span class="font-mono text-muted-foreground">200</span></div>
+            <div class="grid grid-cols-[1fr_auto] items-center gap-2 rounded-md px-2 py-2 text-xs odd:bg-muted/40"><span class="truncate font-mono text-muted-foreground">/category/page/2</span><span class="font-mono text-muted-foreground">200</span></div>
+            <div class="grid grid-cols-[1fr_auto] items-center gap-2 rounded-md px-2 py-2 text-xs odd:bg-muted/40"><span class="truncate font-mono text-muted-foreground">/category/page/3</span><span class="font-mono text-muted-foreground">200</span></div>
+            <div class="grid grid-cols-[1fr_auto] items-center gap-2 rounded-md px-2 py-2 text-xs odd:bg-muted/40"><span class="truncate font-mono text-muted-foreground">/old-product</span><span class="font-mono text-muted-foreground">301</span></div>
+          </div>
+          <div class="border-t border-border bg-muted/30 px-3 py-3"><p class="text-xs text-muted-foreground">Individual URLs. More investigation needed.</p></div>
+        </div>
+        <ul class="mt-6 space-y-3">
+          <li class="flex items-start gap-3 text-sm"><i data-lucide="x" class="mt-0.5 size-4 shrink-0 text-muted-foreground"></i><span class="text-muted-foreground">Thousands of URLs with little context</span></li>
+          <li class="flex items-start gap-3 text-sm"><i data-lucide="x" class="mt-0.5 size-4 shrink-0 text-muted-foreground"></i><span class="text-muted-foreground">Repeated URL patterns buried in reports</span></li>
+          <li class="flex items-start gap-3 text-sm"><i data-lucide="x" class="mt-0.5 size-4 shrink-0 text-muted-foreground"></i><span class="text-muted-foreground">Manual investigation across multiple tools</span></li>
+          <li class="flex items-start gap-3 text-sm"><i data-lucide="x" class="mt-0.5 size-4 shrink-0 text-muted-foreground"></i><span class="text-muted-foreground">Unclear which issues deserve attention first</span></li>
+        </ul>
+      </div>
+
+      <div class="relative">
+        <div class="absolute -left-3 top-1/2 z-10 hidden size-9 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background shadow-sm lg:flex"><i data-lucide="arrow-right" class="size-4 text-orange-700 dark:text-orange-300"></i></div>
+        <div class="relative flex h-full flex-col overflow-hidden rounded-2xl border border-orange-500/30 bg-card p-5 shadow-lg shadow-orange-950/5 sm:p-7">
+          <div class="pointer-events-none absolute right-0 top-0 size-48 rounded-full bg-orange-500/5 blur-3xl"></div>
+          <div class="relative flex items-center gap-3"><div class="flex size-11 items-center justify-center rounded-xl bg-orange-500/10 text-orange-700 dark:text-orange-300"><i data-lucide="sparkles" class="size-5"></i></div><div><p class="text-xs font-semibold tracking-wider text-orange-700 dark:text-orange-300">With PruneSEO</p><h3 class="mt-1 text-xl font-semibold">A clearer action plan</h3></div></div>
+          <p class="relative mt-5 text-sm leading-6 text-muted-foreground">Organize crawl findings into URL patterns, inspect the signals, and focus your investigation on the issues that matter.</p>
+          <div class="relative mt-6 overflow-hidden rounded-xl border border-border bg-background">
+            <div class="flex items-center justify-between gap-3 border-b border-border px-3 py-3"><div class="flex items-center gap-2"><i data-lucide="file-search" class="size-4 text-orange-700 dark:text-orange-300"></i><span class="text-xs font-semibold">Pattern analysis</span></div><span class="rounded-md bg-orange-500/10 px-2 py-1 text-[10px] font-medium text-orange-700 dark:text-orange-300">EXAMPLE</span></div>
+            <div class="flex items-center gap-2 border-b border-border bg-muted/30 px-3 py-2.5"><i data-lucide="search" class="size-3.5 text-muted-foreground"></i><span class="text-xs text-muted-foreground">Search URL patterns...</span><i data-lucide="sliders-horizontal" class="ml-auto size-3.5 text-muted-foreground"></i></div>
+            <div class="divide-y divide-border">
+              <div class="p-3"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><p class="truncate font-mono text-xs font-medium">/products?sort=*</p><p class="mt-1 text-xs text-muted-foreground">Parameter URLs</p></div><span class="shrink-0 rounded-full border border-orange-500/20 bg-orange-500/5 px-2 py-1 text-[10px] font-medium text-orange-700 dark:text-orange-300">Investigate</span></div><div class="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground"><i data-lucide="filter" class="size-3"></i> Review URL variants</div></div>
+              <div class="p-3"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><p class="truncate font-mono text-xs font-medium">/category/page/*</p><p class="mt-1 text-xs text-muted-foreground">Pagination</p></div><span class="shrink-0 rounded-full border border-orange-500/20 bg-orange-500/5 px-2 py-1 text-[10px] font-medium text-orange-700 dark:text-orange-300">Inspect</span></div><div class="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground"><i data-lucide="filter" class="size-3"></i> Review crawl paths</div></div>
+              <div class="p-3"><div class="flex items-start justify-between gap-3"><div class="min-w-0"><p class="truncate font-mono text-xs font-medium">/old-product/*</p><p class="mt-1 text-xs text-muted-foreground">Redirects</p></div><span class="shrink-0 rounded-full border border-orange-500/20 bg-orange-500/5 px-2 py-1 text-[10px] font-medium text-orange-700 dark:text-orange-300">Verify</span></div><div class="mt-3 flex items-center gap-1.5 text-xs text-muted-foreground"><i data-lucide="filter" class="size-3"></i> Check destinations</div></div>
+            </div>
+            <div class="border-t border-border bg-orange-500/5 px-3 py-3"><div class="flex items-center gap-2 text-xs font-medium"><i data-lucide="list-checks" class="size-4 text-orange-700 dark:text-orange-300"></i> Findings organized for review</div></div>
+          </div>
+          <ul class="mt-6 space-y-3">
+            <li class="flex items-start gap-3 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Group URLs into meaningful patterns</span></li>
+            <li class="flex items-start gap-3 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>See HTTP, robots, and canonical signals together</span></li>
+            <li class="flex items-start gap-3 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Understand why a pattern deserves review</span></li>
+            <li class="flex items-start gap-3 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Follow prioritized recommendations</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="mx-auto mt-12 max-w-3xl text-center sm:mt-16">
+      <div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-orange-500/10 text-orange-700 dark:text-orange-300"><i data-lucide="circle-check" class="size-6"></i></div>
+      <h3 class="mt-5 text-xl font-semibold sm:text-2xl">Make your next crawl more actionable.</h3>
+      <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">Find recurring URL patterns, review technical signals, and build a more focused SEO action plan.</p>
+      <a href="#pricing" class="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">Audit your website <i data-lucide="arrow-up-right" class="size-4"></i></a>
+      <p class="mt-3 text-xs text-muted-foreground">Start with a crawl-based audit. No Google Search Console connection is required.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section id="benefits" class="px-4 py-16 md:py-24">
+  <div class="mx-auto max-w-6xl space-y-12 lg:space-y-16">
+    <div class="reveal-hidden flex flex-col items-center gap-4 text-center">
+      <p class="font-semibold uppercase tracking-wider text-primary">What you get</p>
+      <h2 class="text-balance text-3xl font-bold text-foreground sm:text-4xl">Four outcomes, not twelve feature checkboxes</h2>
+      <p class="text-balance text-lg text-muted-foreground">Each one exists to remove a step from the audit you are doing by hand today.</p>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="reveal-hidden h-full rounded-2xl border border-border bg-card/40 p-6"><div class="space-y-4"><div class="flex items-center gap-3"><div class="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary"><i data-lucide="compass" class="size-[18px]"></i></div><span class="text-xs font-semibold uppercase tracking-wider text-primary">Discover</span></div><h3 class="text-pretty text-lg font-medium">See the URL space your crawl actually reached</h3><p class="text-pretty text-sm text-muted-foreground">Crawl up to the per-run URL ceiling in your plan without opening a browser for each page. The report says how many URLs it fetched and which ones it could not, so you know what was measured and what was not.</p></div></div>
+      <div class="reveal-hidden h-full rounded-2xl border border-border bg-card/40 p-6" style="animation-delay:100ms"><div class="space-y-4"><div class="flex items-center gap-3"><div class="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary"><i data-lucide="layers" class="size-[18px]"></i></div><span class="text-xs font-semibold uppercase tracking-wider text-primary">Understand</span></div><h3 class="text-pretty text-lg font-medium">Find patterns, not isolated problems</h3><p class="text-pretty text-sm text-muted-foreground">Group URLs by the shape of their path, parameters and signals, so waste shows up as a handful of templates rather than tens of thousands of rows. Findings are grouped into six families: http, metadata, canonical, robots, links and patterns.</p></div></div>
+      <div class="reveal-hidden h-full rounded-2xl border border-border bg-card/40 p-6" style="animation-delay:200ms"><div class="space-y-4"><div class="flex items-center gap-3"><div class="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary"><i data-lucide="list-ordered" class="size-[18px]"></i></div><span class="text-xs font-semibold uppercase tracking-wider text-primary">Prioritize</span></div><h3 class="text-pretty text-lg font-medium">Know what deserves attention first</h3><p class="text-pretty text-sm text-muted-foreground">Every finding carries a severity, a confidence level, an affected URL count and a suggested action, so you can see which problems matter most and which are only worth noting.</p></div></div>
+      <div class="reveal-hidden h-full rounded-2xl border border-border bg-card/40 p-6" style="animation-delay:300ms"><div class="space-y-4"><div class="flex items-center gap-3"><div class="flex size-9 items-center justify-center rounded-lg bg-primary/10 text-primary"><i data-lucide="wrench" class="size-[18px]"></i></div><span class="text-xs font-semibold uppercase tracking-wider text-primary">Hand over</span></div><h3 class="text-pretty text-lg font-medium">Take the findings with you</h3><p class="text-pretty text-sm text-muted-foreground">Download the PDF report and a CSV of the findings for your team. Applying a change is yours or your developer&rsquo;s; the audit describes findings, it does not deploy them.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section id="use-cases" aria-labelledby="use-cases-heading" class="relative overflow-hidden border-y border-border bg-muted/20 py-20 sm:py-28">
+  <div class="pointer-events-none absolute -top-40 left-1/2 size-96 -translate-x-1/2 rounded-full bg-orange-500/5 blur-3xl"></div>
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-3xl text-center">
+      <span class="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-orange-700 dark:text-orange-300"><span class="size-1.5 rounded-full bg-orange-500"></span> Built for real SEO workflows</span>
+      <h2 id="use-cases-heading" class="mt-6 text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl">Too many URLs.<br class="hidden sm:block" /> Not enough crawl clarity.</h2>
+      <p class="mx-auto mt-5 max-w-2xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">Whether you manage one growing website or dozens of client sites, find the URL patterns that need attention and turn crawl data into a practical action plan.</p>
+    </div>
+
+    <div class="mt-14 grid gap-5 sm:mt-16 sm:grid-cols-2 lg:gap-6">
+      <article class="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/40 hover:shadow-xl hover:shadow-orange-950/5 sm:p-7">
+        <div class="flex items-start justify-between gap-4"><div class="rounded-xl bg-orange-500/10 p-3 text-orange-700 dark:text-orange-300"><i data-lucide="search-check" class="size-5"></i></div><span class="text-xs font-medium tabular-nums text-muted-foreground">01</span></div>
+        <p class="mt-6 text-xs font-semibold tracking-wider text-muted-foreground">FOR SEO CONSULTANTS</p>
+        <h3 class="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">Turn technical crawls into clear action plans.</h3>
+        <p class="mt-3 text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">Stop handing clients a wall of crawl data. Find recurring URL problems, understand their impact, and prioritize the fixes worth tackling first.</p>
+        <ul class="mt-5 space-y-2.5"><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Group issues by URL pattern</span></li><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Prioritize fixes by impact</span></li><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Make audits easier to explain</span></li></ul>
+        <div class="mt-7 border-t border-border pt-5"><div class="relative rounded-2xl border border-border/70 bg-background p-4 shadow-sm sm:p-5">
+          <div class="mb-5 flex items-center justify-between gap-3"><div class="flex items-center gap-2"><div class="rounded-lg bg-orange-500/10 p-2 text-orange-700 dark:text-orange-300"><i data-lucide="search-check" class="size-4"></i></div><span class="text-xs font-semibold tracking-wider text-muted-foreground">AUDIT FINDINGS</span></div><span class="rounded-full border border-border px-2 py-1 text-[10px] font-medium text-muted-foreground">EXAMPLE</span></div>
+          <div class="mb-5"><div class="text-3xl font-semibold tracking-tight">3</div><p class="mt-1 text-sm text-muted-foreground">patterns to investigate</p></div>
+          <div class="space-y-2"><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">Duplicate parameter URLs</span><span class="shrink-0 text-[11px] text-muted-foreground">High priority</span></div><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">Redirect chains</span><span class="shrink-0 text-[11px] text-muted-foreground">Medium priority</span></div><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">Orphaned pages</span><span class="shrink-0 text-[11px] text-muted-foreground">Review</span></div></div>
+          <div class="mt-4 flex items-center gap-2 text-xs text-muted-foreground"><i data-lucide="file-search" class="size-3.5"></i> Illustrative example — not live audit data</div>
+        </div></div>
+      </article>
+
+      <article class="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/40 hover:shadow-xl hover:shadow-orange-950/5 sm:p-7">
+        <div class="flex items-start justify-between gap-4"><div class="rounded-xl bg-blue-500/10 p-3 text-blue-600 dark:text-blue-400"><i data-lucide="files" class="size-5"></i></div><span class="text-xs font-medium tabular-nums text-muted-foreground">02</span></div>
+        <p class="mt-6 text-xs font-semibold tracking-wider text-muted-foreground">FOR CONTENT-HEAVY WEBSITES</p>
+        <h3 class="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">Keep your URL inventory under control.</h3>
+        <p class="mt-3 text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">Large blogs and publishing sites accumulate tag pages, archives, pagination, and outdated content. Find patterns that deserve a closer look.</p>
+        <ul class="mt-5 space-y-2.5"><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Discover low-value URL patterns</span></li><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Review internal-link depth</span></li><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Identify crawlable pages to improve</span></li></ul>
+        <div class="mt-7 border-t border-border pt-5"><div class="relative rounded-2xl border border-border/70 bg-background p-4 shadow-sm sm:p-5">
+          <div class="mb-5 flex items-center justify-between gap-3"><div class="flex items-center gap-2"><div class="rounded-lg bg-blue-500/10 p-2 text-blue-600 dark:text-blue-400"><i data-lucide="files" class="size-4"></i></div><span class="text-xs font-semibold tracking-wider text-muted-foreground">URL INVENTORY</span></div><span class="rounded-full border border-border px-2 py-1 text-[10px] font-medium text-muted-foreground">EXAMPLE</span></div>
+          <div class="mb-5"><div class="text-3xl font-semibold tracking-tight">4</div><p class="mt-1 text-sm text-muted-foreground">URL groups to review</p></div>
+          <div class="space-y-2"><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">/tag/*</span><span class="shrink-0 text-[11px] text-muted-foreground">Review</span></div><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">/page/*</span><span class="shrink-0 text-[11px] text-muted-foreground">Analyze</span></div><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">?sort=*</span><span class="shrink-0 text-[11px] text-muted-foreground">Investigate</span></div></div>
+          <div class="mt-4 flex items-center gap-2 text-xs text-muted-foreground"><i data-lucide="file-search" class="size-3.5"></i> Illustrative example — not live audit data</div>
+        </div></div>
+      </article>
+
+
+      <article class="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/40 hover:shadow-xl hover:shadow-orange-950/5 sm:p-7">
+        <div class="flex items-start justify-between gap-4"><div class="rounded-xl bg-violet-500/10 p-3 text-violet-600 dark:text-violet-400"><i data-lucide="shopping-cart" class="size-5"></i></div><span class="text-xs font-medium tabular-nums text-muted-foreground">03</span></div>
+        <p class="mt-6 text-xs font-semibold tracking-wider text-muted-foreground">FOR E-COMMERCE STORES</p>
+        <h3 class="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">Find the URL patterns hiding your real pages.</h3>
+        <p class="mt-3 text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">Filters, sorting, variants, and faceted navigation can generate huge URL inventories. See which patterns need crawl and indexability review.</p>
+        <ul class="mt-5 space-y-2.5"><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Inspect filtered and sorted URLs</span></li><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Review canonical and robots signals</span></li><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Protect crawl focus on key pages</span></li></ul>
+        <div class="mt-7 border-t border-border pt-5"><div class="relative rounded-2xl border border-border/70 bg-background p-4 shadow-sm sm:p-5">
+          <div class="mb-5 flex items-center justify-between gap-3"><div class="flex items-center gap-2"><div class="rounded-lg bg-violet-500/10 p-2 text-violet-600 dark:text-violet-400"><i data-lucide="shopping-cart" class="size-4"></i></div><span class="text-xs font-semibold tracking-wider text-muted-foreground">PATTERN ANALYSIS</span></div><span class="rounded-full border border-border px-2 py-1 text-[10px] font-medium text-muted-foreground">EXAMPLE</span></div>
+          <div class="mb-5"><div class="text-3xl font-semibold tracking-tight">3</div><p class="mt-1 text-sm text-muted-foreground">patterns worth reviewing</p></div>
+          <div class="space-y-2"><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">Filtered collections</span><span class="shrink-0 text-[11px] text-muted-foreground">Inspect</span></div><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">Sort parameters</span><span class="shrink-0 text-[11px] text-muted-foreground">Inspect</span></div><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">Product variants</span><span class="shrink-0 text-[11px] text-muted-foreground">Compare</span></div></div>
+          <div class="mt-4 flex items-center gap-2 text-xs text-muted-foreground"><i data-lucide="file-search" class="size-3.5"></i> Illustrative example — not live audit data</div>
+        </div></div>
+      </article>
+
+      <article class="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-1 hover:border-orange-500/40 hover:shadow-xl hover:shadow-orange-950/5 sm:p-7">
+        <div class="flex items-start justify-between gap-4"><div class="rounded-xl bg-emerald-500/10 p-3 text-emerald-600 dark:text-emerald-400"><i data-lucide="network" class="size-5"></i></div><span class="text-xs font-medium tabular-nums text-muted-foreground">04</span></div>
+        <p class="mt-6 text-xs font-semibold tracking-wider text-muted-foreground">FOR TECHNICAL SEO TEAMS</p>
+        <h3 class="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">Compare what your crawler sees from one run to the next.</h3>
+        <p class="mt-3 text-sm leading-6 text-muted-foreground sm:text-base sm:leading-7">Re-crawl the site and compare completed runs to see whether status, canonical and robots signals moved.</p>
+        <ul class="mt-5 space-y-2.5"><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Compare runs on the same patterns</span></li><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Trace findings to observed evidence</span></li><li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-orange-700 dark:text-orange-300"></i><span>Check changes with a later crawl</span></li></ul>
+        <div class="mt-7 border-t border-border pt-5"><div class="relative rounded-2xl border border-border/70 bg-background p-4 shadow-sm sm:p-5">
+          <div class="mb-5 flex items-center justify-between gap-3"><div class="flex items-center gap-2"><div class="rounded-lg bg-emerald-500/10 p-2 text-emerald-600 dark:text-emerald-400"><i data-lucide="network" class="size-4"></i></div><span class="text-xs font-semibold tracking-wider text-muted-foreground">CRAWL COMPARISON</span></div><span class="rounded-full border border-border px-2 py-1 text-[10px] font-medium text-muted-foreground">EXAMPLE</span></div>
+          <div class="mb-5"><div class="text-3xl font-semibold tracking-tight">2</div><p class="mt-1 text-sm text-muted-foreground">crawl runs to compare</p></div>
+          <div class="space-y-2"><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">Latest crawl status</span><span class="shrink-0 text-[11px] text-muted-foreground">Crawler</span></div><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">Previous crawl status</span><span class="shrink-0 text-[11px] text-muted-foreground">Compare</span></div><div class="flex items-center justify-between gap-3 rounded-lg bg-muted/50 px-3 py-3"><span class="min-w-0 truncate text-xs font-medium sm:text-sm">Canonical signals</span><span class="shrink-0 text-[11px] text-muted-foreground">Compare</span></div></div>
+          <div class="mt-4 flex items-center gap-2 text-xs text-muted-foreground"><i data-lucide="file-search" class="size-3.5"></i> Illustrative example — not live audit data</div>
+        </div></div>
+      </article>
+    </div>
+
+    <div class="mx-auto mt-14 max-w-3xl rounded-2xl border border-border bg-card p-6 text-center sm:mt-16 sm:p-9">
+      <div class="mx-auto flex size-12 items-center justify-center rounded-xl bg-orange-500/10 text-orange-700 dark:text-orange-300"><i data-lucide="arrow-down-right" class="size-6"></i></div>
+      <h3 class="mt-4 text-xl font-semibold sm:text-2xl">Start with your URLs. Leave with a clearer plan.</h3>
+      <p class="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted-foreground sm:text-base">Discover URL patterns, inspect technical signals, and prioritize what to fix next — without getting lost in a giant crawl report.</p>
+      <p class="mt-3 text-xs text-muted-foreground">Start with a crawl-based audit. No Search Console connection is required.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section id="trust" class="px-4 py-16 md:py-24">
+  <div class="mx-auto max-w-5xl space-y-12 lg:space-y-16">
+    <div class="reveal-hidden flex flex-col items-center gap-4 text-center">
+      <p class="font-semibold uppercase tracking-wider text-primary">Approach</p>
+      <h2 class="text-balance text-3xl font-bold text-foreground sm:text-4xl">Built around evidence, not SEO guesswork</h2>
+      <p class="text-balance text-lg text-muted-foreground">There is a lot of noise in this market. These are the five commitments we actually build to.</p>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="reveal-hidden flex h-full gap-4 rounded-xl border border-border/60 bg-card/40 p-5"><div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><i data-lucide="radar" class="size-[18px]"></i></div><div class="min-w-0 space-y-1.5"><h3 class="text-pretty text-sm font-medium">Our crawler builds the inventory</h3><p class="text-pretty text-sm text-muted-foreground">The inventory comes from our crawler, so the starting point is the URLs we can actually reach rather than whatever a search engine has already indexed.</p></div></div>
+      <div class="reveal-hidden flex h-full gap-4 rounded-xl border border-border/60 bg-card/40 p-5" style="animation-delay:90ms"><div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><i data-lucide="fingerprint" class="size-[18px]"></i></div><div class="min-w-0 space-y-1.5"><h3 class="text-pretty text-sm font-medium">Observed is kept separate from inferred</h3><p class="text-pretty text-sm text-muted-foreground">A status code, title, canonical or robots directive we fetched is observed. A conclusion drawn from URL relationships or groups is inferred. The report labels both, so a diagnosis cannot quietly pass as a fact.</p></div></div>
+      <div class="reveal-hidden flex h-full gap-4 rounded-xl border border-border/60 bg-card/40 p-5" style="animation-delay:180ms"><div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><i data-lucide="boxes" class="size-[18px]"></i></div><div class="min-w-0 space-y-1.5"><h3 class="text-pretty text-sm font-medium">Patterns are structural</h3><p class="text-pretty text-sm text-muted-foreground">URLs are grouped by the shape of their path, parameters and signals, so a finding covers a whole template rather than the rows you happened to look at.</p></div></div>
+      <div class="reveal-hidden flex h-full gap-4 rounded-xl border border-border/60 bg-card/40 p-5" style="animation-delay:270ms"><div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><i data-lucide="binary" class="size-[18px]"></i></div><div class="min-w-0 space-y-1.5"><h3 class="text-pretty text-sm font-medium">Inferred labels say so</h3><p class="text-pretty text-sm text-muted-foreground">Where a conclusion is our inference from crawl signals rather than a fact we fetched, the interface labels it as inferred. Duplicate groups are the clearest case: the group is derived by comparing canonical declarations, so it is marked inferred rather than presented as observed.</p></div></div>
+      <div class="reveal-hidden flex h-full gap-4 rounded-xl border border-border/60 bg-card/40 p-5 sm:col-span-2" style="animation-delay:360ms"><div class="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><i data-lucide="sigma" class="size-[18px]"></i></div><div class="min-w-0 space-y-1.5"><h3 class="text-pretty text-sm font-medium">Progress is measured, not asserted</h3><p class="text-pretty text-sm text-muted-foreground">A re-crawl re-reads the same patterns so you can tell which change moved the number and which one changed nothing. Every plan includes four crawls per website per month.</p></div></div>
+      <div class="reveal-hidden sm:col-span-2" style="animation-delay:450ms">
+        <div class="flex flex-wrap items-center justify-center gap-10 rounded-xl bg-muted/40 p-4">
+          <span class="inline-flex h-8 items-center rounded-md border border-border bg-background/60 px-2.5 text-sm">Crawler-first</span>
+          <span class="inline-flex h-8 items-center rounded-md border border-border bg-background/60 px-2.5 text-sm">Observed vs inferred</span>
+          <span class="inline-flex h-8 items-center rounded-md border border-border bg-background/60 px-2.5 text-sm">Pattern clustering</span>
+          <span class="inline-flex h-8 items-center rounded-md border border-border bg-background/60 px-2.5 text-sm">Evidence-based</span>
+          <span class="inline-flex h-8 items-center rounded-md border border-border bg-background/60 px-2.5 text-sm">Large-site ready</span>
+        </div>
+      </div>
+    </div>
+    <p class="reveal-hidden mx-auto max-w-3xl text-center text-sm text-pretty text-muted-foreground">Two caveats we would rather state than bury. PruneSEO tells you what is wrong with your indexation and what to change; it does not guarantee that Google indexes anything, and it does not promise rankings. And the demo above is illustrative: the real product reports how many URLs it fetched and which ones it could not, rather than treating silence as a clean result.</p>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="bg-muted/30 px-4 py-16 md:py-24">
+  <div class="mx-auto max-w-5xl space-y-12 lg:space-y-16">
+    <div class="reveal-hidden flex flex-col items-center gap-4 text-center">
+      <p class="font-semibold uppercase tracking-wider text-primary">Pricing</p>
+      <h2 class="text-balance text-3xl font-bold text-foreground sm:text-4xl">Priced by the inventory you need to audit</h2>
+    </div>
+    <div class="mx-auto grid max-w-6xl gap-4 md:grid-cols-2 lg:grid-cols-2">
+
+      <div class="reveal-hidden relative h-full">
+        <div class="flex h-full flex-col gap-6 rounded-2xl border border-border bg-card/40 p-6">
+          <div class="space-y-2"><div class="flex items-center justify-between gap-3"><h3 class="text-lg font-medium">Starter</h3></div><p class="text-pretty text-sm text-muted-foreground">One website, simple SEO monitoring.</p></div>
+          <p class="flex items-baseline gap-1.5"><span class="text-3xl font-semibold tabular-nums">$19</span><span class="text-base text-muted-foreground">/month</span></p>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">Add/Manage 1 website</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">5,000 unique URLs per full crawl</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">4 full crawl runs/website/month</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">1 crawl run/month for public websites until verified</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">CSV reports &amp; filtering</span></li>
+          </ul>
+          <p class="mt-auto flex items-center justify-center gap-4 text-xs text-muted-foreground"><span class="inline-flex items-center gap-1.5"><i data-lucide="credit-card" class="size-3.5"></i> Cancel any time</span></p>
+        </div>
+      </div>
+
+      <div class="reveal-hidden relative h-full" style="animation-delay:150ms">
+        <span class="absolute -top-3 left-1/2 z-10 h-6 -translate-x-1/2 whitespace-nowrap rounded-md bg-primary px-2.5 text-xs font-semibold uppercase leading-6 tracking-wider text-primary-foreground">Most popular</span>
+        <div class="flex h-full flex-col gap-6 rounded-2xl border border-primary/40 bg-card/60 p-6 ring-2 ring-primary/20">
+          <div class="space-y-2"><div class="flex items-center justify-between gap-3"><h3 class="text-lg font-medium">Growth</h3></div><p class="text-pretty text-sm text-muted-foreground">Growing sites and small teams.</p></div>
+          <p class="flex items-baseline gap-1.5"><span class="text-3xl font-semibold tabular-nums">$49</span><span class="text-base text-muted-foreground">/month</span></p>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">Add/Manage 3 websites</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">20,000 unique URLs per full crawl</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">4 full crawl runs/website/month</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">1 crawl run/month for public websites until verified</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">CSV reports &amp; filtering</span></li>
+          </ul>
+          <p class="mt-auto flex items-center justify-center gap-4 text-xs text-muted-foreground"><span class="inline-flex items-center gap-1.5"><i data-lucide="credit-card" class="size-3.5"></i> Cancel any time</span></p>
+        </div>
+      </div>
+
+      <div class="reveal-hidden relative h-full" style="animation-delay:300ms">
+        <div class="flex h-full flex-col gap-6 rounded-2xl border border-border bg-card/40 p-6">
+          <div class="space-y-2"><div class="flex items-center justify-between gap-3"><h3 class="text-lg font-medium">Pro</h3></div><p class="text-pretty text-sm text-muted-foreground">SEO professionals and multi-site businesses.</p></div>
+          <p class="flex items-baseline gap-1.5"><span class="text-3xl font-semibold tabular-nums">$99</span><span class="text-base text-muted-foreground">/month</span></p>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">Add/Manage 10 websites</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">50,000 unique URLs per full crawl</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">4 full crawl runs/website/month</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">1 crawl run/month for public websites until verified</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">CSV reports &amp; filtering</span></li>
+          </ul>
+          <p class="mt-auto flex items-center justify-center gap-4 text-xs text-muted-foreground"><span class="inline-flex items-center gap-1.5"><i data-lucide="credit-card" class="size-3.5"></i> Cancel any time</span></p>
+        </div>
+      </div>
+
+      <div class="reveal-hidden relative h-full" style="animation-delay:450ms">
+        <div class="flex h-full flex-col gap-6 rounded-2xl border border-border bg-card/40 p-6">
+          <div class="space-y-2"><div class="flex items-center justify-between gap-3"><h3 class="text-lg font-medium">Agency</h3></div><p class="text-pretty text-sm text-muted-foreground">Agencies managing multiple clients.</p></div>
+          <p class="flex items-baseline gap-1.5"><span class="text-3xl font-semibold tabular-nums">$149</span><span class="text-base text-muted-foreground">/month</span></p>
+          <ul class="space-y-2.5">
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">Add/Manage 25 websites</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">50,000 unique URLs per full crawl</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">4 full crawl runs/website/month</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">1 crawl run/month for public websites until verified</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">CSV reports &amp; filtering</span></li>
+            <li class="flex items-start gap-2.5 text-sm"><i data-lucide="check" class="mt-0.5 size-4 shrink-0 text-emerald-600 dark:text-emerald-400"></i><span class="text-pretty">White-label PDF reports</span></li>
+          </ul>
+          <p class="mt-auto flex items-center justify-center gap-4 text-xs text-muted-foreground"><span class="inline-flex items-center gap-1.5"><i data-lucide="credit-card" class="size-3.5"></i> Cancel any time</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mx-auto mt-7 grid max-w-fit">
+    <a href="https://pruneseo.com/billing" class="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"><span class="whitespace-nowrap">Compare and Select Plan Now</span><i data-lucide="arrow-right" class="size-4"></i></a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faqs" class="px-4 py-16 md:py-24">
+  <div class="mx-auto max-w-4xl">
+    <div class="reveal-hidden flex flex-col items-center gap-4 text-center">
+      <p class="font-semibold uppercase tracking-wider text-primary">Frequently asked questions</p>
+      <h2 class="text-balance text-3xl font-bold text-foreground sm:text-4xl">Understand the evidence. Know what to fix.</h2>
+      <p class="text-balance text-lg text-muted-foreground">Learn how PruneSEO analyzes URL patterns, identifies potential SEO waste, and helps you plan your next steps.</p>
+    </div>
+    <div class="reveal-hidden mt-12" style="animation-delay:150ms">
+      <div class="w-full rounded-2xl border border-primary/15 px-4 py-3 shadow-sm ring-4 ring-primary/10 sm:px-8" id="faq-list"></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer class="border-t border-border">
+  <div class="mx-auto max-w-7xl px-4">
+    <div class="grid grid-cols-2 gap-8 py-16 md:grid-cols-6">
+      <div class="col-span-full flex flex-col items-start md:col-span-2">
+        <div class="space-y-4">
+          <div class="flex items-center space-x-2"><i data-lucide="zap" class="size-8"></i><span class="text-xl font-semibold">PruneSEO</span></div>
+          <p class="py-2 text-base text-muted-foreground md:pr-12">Indexation audit for large websites. Find the URLs Google isn&rsquo;t indexing and turn them into a cleanup plan.</p>
+          <nav aria-label="Social links" class="flex items-center gap-4 py-2">
+            <a href="https://x.com/Leong2599" target="_blank" rel="noreferrer" aria-label="Twitter" class="inline-flex size-8 items-center justify-center rounded-full border border-border transition-all duration-200 hover:border-primary/30 hover:bg-primary/10 hover:text-primary"><i data-lucide="twitter" class="size-4"></i></a>
+            <a href="https://www.youtube.com/@pruneSEO" target="_blank" rel="noreferrer" aria-label="YouTube" class="inline-flex size-8 items-center justify-center rounded-full border border-border transition-all duration-200 hover:border-primary/30 hover:bg-primary/10 hover:text-primary"><i data-lucide="youtube" class="size-4"></i></a>
+          </nav>
+        </div>
+      </div>
+      <div class="col-span-1 items-start"><span class="text-sm font-semibold uppercase">Product</span><ul class="mt-4 space-y-3">
+        <li><a href="#how-it-works" class="text-sm text-muted-foreground transition-colors hover:text-primary">How it works</a></li>
+        <li><a href="https://docs.pruneseo.com/docs/category/features" target="_blank" rel="noreferrer" class="text-sm text-muted-foreground transition-colors hover:text-primary">Features</a></li>
+        <li><a href="https://docs.pruneseo.com/docs/category/guidelines" target="_blank" rel="noreferrer" class="text-sm text-muted-foreground transition-colors hover:text-primary">Guidelines</a></li>
+        <li><a href="#pricing" class="text-sm text-muted-foreground transition-colors hover:text-primary">Pricing</a></li>
+        <li><a href="#faqs" class="text-sm text-muted-foreground transition-colors hover:text-primary">FAQ</a></li>
+      </ul></div>
+      <div class="col-span-1 items-start"><span class="text-sm font-semibold uppercase">SEO Tools</span><ul class="mt-4 space-y-3">
+        <li><a href="https://pruneseo.com/tools/domain-rating-checker" class="text-sm text-muted-foreground transition-colors hover:text-primary">Domain Rating Checker</a></li>
+        <li><a href="https://pruneseo.com/tools/sitemap-checker" class="text-sm text-muted-foreground transition-colors hover:text-primary">Sitemap Checker</a></li>
+        <li><a href="https://pruneseo.com/tools/robots-txt-checker" class="text-sm text-muted-foreground transition-colors hover:text-primary">Robots.txt Checker</a></li>
+        <li><a href="https://pruneseo.com/tools/keyword-density-checker" class="text-sm text-muted-foreground transition-colors hover:text-primary">Keyword Density Checker</a></li>
+        <li><a href="https://pruneseo.com/tools/meta-description-checker" class="text-sm text-muted-foreground transition-colors hover:text-primary">Meta Description Checker</a></li>
+        <li><a href="https://pruneseo.com/tools/serp-snippet-simulator" class="text-sm text-muted-foreground transition-colors hover:text-primary">SERP Snippet Simulator</a></li>
+      </ul></div>
+      <div class="col-span-1 items-start"><span class="text-sm font-semibold uppercase">Company</span><ul class="mt-4 space-y-3">
+        <li><a href="https://docs.pruneseo.com/blog" target="_blank" rel="noreferrer" class="text-sm text-muted-foreground transition-colors hover:text-primary">Blogs</a></li>
+        <li><a href="https://pruneseo.com/about" class="text-sm text-muted-foreground transition-colors hover:text-primary">About</a></li>
+        <li><a href="https://pruneseo.com/contact" class="text-sm text-muted-foreground transition-colors hover:text-primary">Contact</a></li>
+        <li><a href="https://pruneseo.com/start-audit" class="text-sm text-muted-foreground transition-colors hover:text-primary">Start an audit</a></li>
+      </ul></div>
+      <div class="col-span-1 items-start"><span class="text-sm font-semibold uppercase">Legal</span><ul class="mt-4 space-y-3">
+        <li><a href="https://pruneseo.com/privacy-policy" class="text-sm text-muted-foreground transition-colors hover:text-primary">Privacy Policy</a></li>
+        <li><a href="https://pruneseo.com/cookie-policy" class="text-sm text-muted-foreground transition-colors hover:text-primary">Cookie Policy</a></li>
+        <li><a href="https://pruneseo.com/terms-of-service" class="text-sm text-muted-foreground transition-colors hover:text-primary">Terms of Service</a></li>
+        <li><a href="https://pruneseo.com/cancellation-and-refunds" class="text-sm text-muted-foreground transition-colors hover:text-primary">Cancellation &amp; Refunds</a></li>
+      </ul></div>
+    </div>
+  </div>
+  <div class="border-t border-border py-8">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4">
+      <span class="text-sm text-muted-foreground">&copy; <span id="year"></span> PruneSEO. All Rights Reserved.</span>
+      <button type="button" class="theme-toggle inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" aria-label="Toggle theme"><i data-lucide="sun-moon" class="size-4"></i> Toggle theme</button>
+    </div>
+  </div>
+</footer>
+</div>
+
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+// FAQ data, shared with the accordion
+const faqs = [
+  { q: "What is PruneSEO?", a: "PruneSEO crawls your website, builds a URL inventory, groups similar URLs into patterns, and checks the pages it fetched for technical SEO problems. Each finding records whether it is observed or inferred, and the results are delivered as a PDF report and a CSV export. Instead of making you review thousands of URLs one by one, it helps you focus on the patterns that matter." },
+  { q: "Does PruneSEO replace Google Search Console?", a: "No. PruneSEO does not connect to Search Console or ask for a Google account. It crawls the site itself and builds its own inventory and findings, while Search Console remains the place to check Google's own coverage data." },
+  { q: "What is a URL pattern?", a: "A URL pattern is a group of URLs that share a structure or a potentially important SEO characteristic. Examples include filter combinations that generate many URL variants, archive pages with similar templates, and parameter-driven URLs. PruneSEO groups these URLs so you can understand the scale of a potential problem, review supporting evidence, assess confidence, and decide what action—if any—is appropriate." },
+  { q: "Does PruneSEO inspect every URL?", a: "It crawls every URL it can reach up to the per-run URL ceiling in your plan, within fixed request, byte, runtime and concurrency limits. URLs it could not fetch are recorded as such rather than counted as clean. There is no Search Console sampling because there is no Search Console connection." },
+  { q: "Which findings come from Google, and which are inferred?", a: "All findings come from PruneSEO's crawl. Each one records whether it is observed — a status code, title, canonical or robots directive the crawler read — or inferred — an interpretation of URL relationships or groups. Inferred findings are labelled as such." },
+  { q: "Can PruneSEO guarantee that Google will index my pages?", a: "No tool can guarantee that Google will index a particular page. PruneSEO helps you identify potential technical barriers, understand URL patterns, and prioritize corrective actions. Actual indexing decisions depend on Google's systems and many factors beyond your control. Our goal is to give you better evidence and a clearer action plan—not promise rankings or indexing outcomes." },
+  { q: "Can PruneSEO fix SEO issues automatically?", a: "No. PruneSEO produces a PDF audit report and a CSV export of the findings. It does not write nginx maps, .htaccess rules, redirects, canonical manifests, noindex sets, robots.txt or sitemap changes, and there is no executor that would apply them. Applying a change is yours or your developer's." },
+  { q: "Is there a free plan?", a: "No. PruneSEO is sold by subscription. Starter is $19 a month for one website, Growth $49 for three, Pro $99 for ten, and Agency from $149 for twenty-five. Every tier includes four crawls per website per billing period and a per-run URL ceiling of 5,000 to 50,000 URLs. See the pricing section for the current allowances." },
+  { q: "How are findings prioritized?", a: "Each finding carries a severity, a confidence level and an affected URL count. Severity describes how much the problem matters; confidence describes how sure the rule is that the finding is real; the affected count shows its scale. Findings also record whether they are observed or inferred, so you can review the evidence behind a recommendation before deciding what to change." },
+  { q: "Is every finding something I must change?", a: "No. Not every unusual URL is an SEO problem, and low-severity or low-confidence findings are evidence for review rather than instructions. PruneSEO reports what the crawler saw and what the rule inferred, plus a suggested action. You decide which changes make sense for the purpose of each page." },
+  { q: "Can PruneSEO handle large websites with 100,000+ URLs?", a: "PruneSEO is built around crawler-based URL discovery and pattern analysis, but a single crawl is capped at the per-run URL ceiling in your plan — 5,000 on Starter, 20,000 on Growth, and 50,000 on Pro and Agency — along with fixed request, byte, runtime and concurrency limits. A site with more URLs than that needs more than one crawl, and each crawl is a separate audit." },
+  { q: "Is PruneSEO only for ecommerce websites?", a: "No. Ecommerce sites often have large numbers of filter, sort, and parameter-driven URLs, but similar challenges appear on publishers, marketplaces, directories, SaaS websites, and large content sites. Agencies can also use pattern-based analysis to investigate multiple client websites. The value depends on your site's URL structure and the scale of the problems you need to investigate." },
+  { q: "Do I need technical SEO experience to use PruneSEO?", a: "You do not need to be a technical SEO specialist to understand the recommendations. PruneSEO explains the pattern, the potential impact, and the suggested next steps. Developers and experienced SEO professionals can also inspect the supporting evidence and implementation details. For changes involving redirects, canonical tags, robots directives, or URL handling, we recommend reviewing the proposed changes before deployment." },
+  { q: "Will PruneSEO delete pages or change my website?", a: "The audit is a report, not a deployment. Recommendations may include redirects, canonical adjustments, indexing directives, or URL-structure changes, but each should be evaluated against the purpose of the affected pages. The PDF and CSV describe findings; they are not changes to your site, and applying a change is yours or your developer's." },
+  { q: "Does finding URL waste mean Google is wasting crawl budget?", a: "Not necessarily. A large number of URL variants can indicate unnecessary complexity, but the existence of those URLs alone does not prove that Google is wasting crawl budget. PruneSEO reports what its own crawl observed and labels pattern-level conclusions as inferred, so you can see which claims rest on direct evidence." },
+  { q: "How do I get started?", a: "Start by entering your website and running a crawl within your plan's limits. Review the discovered URLs, inspect the highest-priority findings, and examine the evidence behind each suggestion. Apply only the changes that make sense for your website, then run another crawl when your plan allows it to check what changed." }
+];
+
+function renderFaqs() {
+  const list = document.getElementById("faq-list");
+  list.innerHTML = faqs.map((item, i) => `
+    <div class="faq-item border-b border-dashed border-border last:border-b-0" data-open="${i === 0 ? 'true' : 'false'}">
+      <button type="button" class="faq-trigger flex w-full items-center justify-between gap-4 py-4 text-left text-base font-medium hover:no-underline" aria-expanded="${i === 0 ? 'true' : 'false'}">
+        <span>${item.q}</span>
+        <i data-lucide="chevron-down" class="faq-chevron size-4 shrink-0 text-muted-foreground"></i>
+      </button>
+      <div class="faq-answer"><div><p class="pb-4 text-base leading-7 text-muted-foreground">${item.a}</p></div></div>
+    </div>`).join("");
+
+  list.querySelectorAll(".faq-trigger").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const item = trigger.closest(".faq-item");
+      const isOpen = item.getAttribute("data-open") === "true";
+      list.querySelectorAll(".faq-item").forEach((el) => {
+        el.setAttribute("data-open", "false");
+        el.querySelector(".faq-trigger").setAttribute("aria-expanded", "false");
+      });
+      if (!isOpen) {
+        item.setAttribute("data-open", "true");
+        trigger.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+}
+
+// Footer year
+document.getElementById("year").textContent = new Date().getFullYear();
+
+// Ripple circles
+(function () {
+  const host = document.getElementById("ripple");
+  if (!host) return;
+  const base = 210, count = 8;
+  for (let i = 0; i < count; i++) {
+    const size = base + i * 70;
+    const c = document.createElement("div");
+    c.className = "ripple-circle";
+    c.style.width = size + "px";
+    c.style.height = size + "px";
+    c.style.opacity = (0.24 - i * 0.03).toFixed(2);
+    c.style.animationDelay = (i * 0.06) + "s";
+    host.appendChild(c);
+  }
+})();
+
+// Video click-to-load
+(function () {
+  const btn = document.getElementById("video-play");
+  const frame = document.getElementById("video-frame");
+  if (!btn || !frame) return;
+  btn.addEventListener("click", () => {
+    frame.src = "https://www.youtube-nocookie.com/embed/HGKo_-JewbU?autoplay=1&rel=0";
+    frame.classList.remove("hidden");
+    btn.classList.add("hidden");
+  });
+})();
+
+// Theme toggle
+function applyTheme(dark) {
+  document.documentElement.classList.toggle("dark", dark);
+  try { localStorage.setItem("theme", dark ? "dark" : "light"); } catch (e) {}
+  document.querySelectorAll(".theme-icon-dark").forEach((el) => el.classList.toggle("hidden", dark));
+  document.querySelectorAll(".theme-icon-light").forEach((el) => el.classList.toggle("hidden", !dark));
+}
+document.querySelectorAll("#theme-toggle, .theme-toggle").forEach((el) => {
+  el.addEventListener("click", () => applyTheme(!document.documentElement.classList.contains("dark")));
+});
+applyTheme(document.documentElement.classList.contains("dark"));
+
+// Mobile menu
+(function () {
+  const toggle = document.getElementById("mobile-toggle");
+  const menu = document.getElementById("mobile-menu");
+  if (!toggle || !menu) return;
+  toggle.addEventListener("click", () => {
+    const open = menu.classList.toggle("hidden") === false;
+    toggle.setAttribute("aria-expanded", String(open));
+  });
+})();
+
+// Navbar scrolled background
+(function () {
+  const header = document.getElementById("site-header");
+  if (!header) return;
+  const onScroll = () => {
+    if (window.scrollY > 50) {
+      header.classList.add("border-b", "border-border");
+      header.style.background = "rgb(var(--background) / 0.7)";
+      header.style.backdropFilter = "blur(12px)";
+    } else {
+      header.classList.remove("border-b", "border-border");
+      header.style.background = "";
+      header.style.backdropFilter = "";
+    }
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+})();
+
+// Scroll reveal
+(function () {
+  const els = document.querySelectorAll(".reveal-hidden");
+  if (!("IntersectionObserver" in window)) {
+    els.forEach((el) => el.classList.add("reveal-visible"));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("reveal-visible");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach((el) => io.observe(el));
+})();
+
+// Init
+renderFaqs();
+if (window.lucide) window.lucide.createIcons();
+</script>
+</body>
+</html>
